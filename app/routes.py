@@ -1,6 +1,19 @@
+from flask import render_template, flash, redirect, url_for
 from app import app
+from app.forms import LoginForm
+
 
 @app.route('/')
 @app.route('/index')
 def index():
-    return '<h1>Hello world!</h1>'
+    user = {'username': 'boadzie'}
+    return render_template('index.html', title='Home', user=user)
+
+
+@app.route('/login', methods=('GET', 'POST'))
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        flash('The form was submitted successfully. Name is {}'.format(form.username.data))
+        return redirect(url_for('index'))
+    return render_template('login.html', title='Sign in', form=form)
